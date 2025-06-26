@@ -274,7 +274,7 @@ number:
   - platform: modbus_controller
     use_write_multiple: true
     modbus_controller_id: ${modbus_controller_id}
-    id: gridf_requency_protection_high"
+    id: grid_requency_protection_high
     name: "Grid Frequency Protection - high"
     unit_of_measurement: "Hz"
     device_class: frequency
@@ -290,7 +290,7 @@ number:
   - platform: modbus_controller
     use_write_multiple: true
     modbus_controller_id: ${modbus_controller_id}
-    id: gridf_requency_protection_low"
+    id: grid_requency_protection_low
     name: "Grid Frequency Protection - low"
     unit_of_measurement: "Hz"
     device_class: frequency
