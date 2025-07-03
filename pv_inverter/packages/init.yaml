@@ -21,7 +21,7 @@ esphome:
   comment: "${device_description} by Lewa-Reka % Harvey Dent https://github.com/HarveyDent1/esphome-pv-inverter"
   project:
     name: "lewa-reka-harvey-dent.esphome-pv-inverter"
-    version: "0.3.2"
+    version: "0.3.4"
 
 logger:
   level: WARN
