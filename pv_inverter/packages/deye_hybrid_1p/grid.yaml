@@ -281,7 +281,7 @@ number:
     register_type: holding
     min_value: 100
     max_value: 287
-    step: 0.1
+    step: 1
     address: 287
     value_type: U_WORD
     icon: "mdi:sine-wave"
@@ -297,7 +297,7 @@ number:
     register_type: holding
     min_value: 100
     max_value: 288
-    step: 0.1
+    step: 1
     address: 287
     value_type: U_WORD
     icon: "mdi:sine-wave"
