@@ -168,7 +168,7 @@ number:
     name: "Generator Operating Time"
     id: generator_operating_time
     unit_of_measurement: "h"
-    device_class: time
+    device_class: duration
     entity_category: config
     register_type: holding
     min_value: 0
@@ -182,9 +182,9 @@ number:
     use_write_multiple: true
     modbus_controller_id: ${modbus_controller_id}
     name: "Generator Cooling Time"
-    id: generator_ciiling_time
+    id: generator_cooling_time
     unit_of_measurement: "h"
-    device_class: time
+    device_class: duration
     entity_category: config
     register_type: holding
     min_value: 0
