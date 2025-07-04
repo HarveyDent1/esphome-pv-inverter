@@ -175,8 +175,6 @@ number:
     max_value: 24
     step: 1
     address: 223
-    configurable:
-      mode: box
     value_type: U_WORD
     icon: "mdi:generator-stationary"
 
@@ -193,7 +191,5 @@ number:
     max_value: 24
     step: 1
     address: 224
-    configurable:
-      mode: box
     value_type: U_WORD
     icon: "mdi:generator-stationary"
