@@ -262,4 +262,4 @@ select:
     optionsmap:
       "Disable": 0
       "Enable": 1
-      "Generator": [0, 13]
+      "Generator": 13
