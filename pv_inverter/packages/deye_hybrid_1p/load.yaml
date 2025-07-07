@@ -142,7 +142,7 @@ sensor:
 
   - platform: template
     name: "Power Losses" # Includes consumption of the inverter device itself as well AC/DC conversion losses
-    id: power_losses_total
+    id: power_losses
     unit_of_measurement: "W"
     device_class: power
     state_class: total_increasing
@@ -179,12 +179,13 @@ sensor:
     accuracy_decimals: 1
     lambda: |-
       return (
-        id(total_energy_bought).state + 
-        id(total_pv_production).state + 
-        id(total_generator_production).state + 
+        id(total_energy_bought).state +
+        id(total_pv_production).state +
+        id(total_generator_production).state +
         id(total_battery_discharge).state -
-        (id(total_energy_sold).state -
-        (id(total_battery_charge).state -
-        (id(total_consumption).state 
+        id(total_energy_sold).state -
+        id(total_battery_charge).state -
+        id(total_consumption).state
       );
+
     icon: "mdi:home-lightning-bolt"
