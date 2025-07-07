@@ -149,9 +149,10 @@ sensor:
     device_class: "power"
     state_class: "total_increasing"
     unit_of_measurement: "W"
-    rule: 1
-    digits: 0
-    uint: enforce
+    accuracy_decimals: 1
+    value_type: U_DWORD_R
+    filters:
+      - multiply: 1
     sensors:
       - registers: 186
       - registers: 187
