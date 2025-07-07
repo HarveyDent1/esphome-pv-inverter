@@ -139,4 +139,25 @@ sensor:
     filters:
       - multiply: 0.1
     icon: "mdi:home-lightning-bolt"
+  
+  - platform: modbus_controller
+    modbus_controller_id: ${modbus_controller_id}
+    name: "Power losses"
+    id: power_losses
+    description: Includes consumption of the inverter device itself as well AC/DC conversion losses
+    register_type: holding
+    device_class: "power"
+    state_class: "total_increasing"
+    unit_of_measurement: "W"
+    rule: 1
+    digits: 0
+    uint: enforce
+    sensors:
+      - registers: 186
+      - registers: 187
+      - signed:
+        registers: 190
+      - operator: subtract
+        signed:
+        registers: 175
 
