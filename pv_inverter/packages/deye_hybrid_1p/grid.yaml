@@ -141,9 +141,17 @@ sensor:
     state_class: "total_increasing"
     accuracy_decimals: 1
     value_type: U_DWORD_R
+    icon: "mdi:transmission-tower-import"
     filters:
       - multiply: 0.1
-    icon: "mdi:transmission-tower-import"
+      # PONIŻSZY FILTR ROZWIĄZUJE PROBLEM SPADAJĄCYCH WARTOŚCI
+      - lambda: |-
+          static float last_value = NAN;
+          if (isnan(last_value) || x >= last_value) {
+            last_value = x;
+            return x;
+          }
+          return {};
 
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
@@ -334,5 +342,6 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
+
 
 
