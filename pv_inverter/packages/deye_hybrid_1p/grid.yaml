@@ -130,33 +130,49 @@ sensor:
       - multiply: 0.1
     icon: "mdi:transmission-tower-export"
 
+  # 1. Tworzymy dwa sensory pomocnicze do odczytu osobnych rejestrów
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
-    name: "Total Energy Bought"
-    id: total_energy_bought
-    register_type: holding
+    id: total_energy_bought_low # Rejestr 78 (dolna część)
     address: 78
+    register_type: holding
+    value_type: U_WORD
+    internal: true # Ukrywamy ten sensor w Home Assistant
+
+  - platform: modbus_controller
+    modbus_controller_id: ${modbus_controller_id}
+    id: total_energy_bought_high # Rejestr 80 (górna część)
+    address: 80
+    register_type: holding
+    value_type: U_WORD
+    internal: true # Ukrywamy ten sensor w Home Assistant
+
+  # 2. Tworzymy główny sensor, który łączy powyższe wartości
+  - platform: template
+    name: "Total Energy Bought"
+    id: total_energy_bought # Nadpisujemy stary ID nowym sensorem
     unit_of_measurement: "kWh"
     device_class: energy
     state_class: "total_increasing"
     accuracy_decimals: 1
-    value_type: U_DWORD_R
     icon: "mdi:transmission-tower-import"
-    filters:
-      - multiply: 0.1
-      # PONIŻSZY FILTR ROZWIĄZUJE PROBLEM SPADKÓW I NAGŁYCH SKOKÓW WARTOŚCI
-      - lambda: |-
-          static float last_value = NAN;
-          // Zaakceptuj wartość tylko wtedy, gdy:
-          // 1. Jest to pierwszy odczyt (isnan) LUB
-          // 2. Nowa wartość (x) jest większa od ostatniej, ALE nie skacze o więcej niż 1000 kWh.
-          if (isnan(last_value) || (x >= last_value && x < last_value + 1000.0)) {
-            last_value = x;
-            return x;
-          }
-          // W każdym innym przypadku (spadek lub nienaturalny skok) odrzuć odczyt.
-          return {};
+    lambda: |-
+      // Pobieramy wartości z naszych dwóch sensorów pomocniczych
+      auto high = id(total_energy_bought_high).state;
+      auto low = id(total_energy_bought_low).state;
 
+      // Łączymy je w jedną 32-bitową liczbę i stosujemy skalowanie 0.1
+      // (wartość_górna * 65536 + wartość_dolna) * 0.1
+      float calculated_value = ((high * 65536.0) + low) * 0.1;
+
+      // Zostawiamy nasze "pancerne" zabezpieczenie na wszelki wypadek
+      static float last_value = NAN;
+      if (isnan(last_value) || (calculated_value >= last_value && calculated_value < last_value + 1000.0)) {
+        last_value = calculated_value;
+        return calculated_value;
+      }
+      return {}; // Odrzuć, jeśli coś nadal jest nie tak
+    update_interval: 15s # Ustaw interwał odświeżania, np. 15 sekund
 
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
@@ -347,6 +363,7 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
+
 
 
 
