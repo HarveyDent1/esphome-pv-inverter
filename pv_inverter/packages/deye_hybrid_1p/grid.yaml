@@ -144,14 +144,19 @@ sensor:
     icon: "mdi:transmission-tower-import"
     filters:
       - multiply: 0.1
-      # PONIŻSZY FILTR ROZWIĄZUJE PROBLEM SPADAJĄCYCH WARTOŚCI
+      # PONIŻSZY FILTR ROZWIĄZUJE PROBLEM SPADKÓW I NAGŁYCH SKOKÓW WARTOŚCI
       - lambda: |-
           static float last_value = NAN;
-          if (isnan(last_value) || x >= last_value) {
+          // Zaakceptuj wartość tylko wtedy, gdy:
+          // 1. Jest to pierwszy odczyt (isnan) LUB
+          // 2. Nowa wartość (x) jest większa od ostatniej, ALE nie skacze o więcej niż 1000 kWh.
+          if (isnan(last_value) || (x >= last_value && x < last_value + 1000.0)) {
             last_value = x;
             return x;
           }
+          // W każdym innym przypadku (spadek lub nienaturalny skok) odrzuć odczyt.
           return {};
+
 
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
@@ -342,6 +347,7 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
+
 
 
 
