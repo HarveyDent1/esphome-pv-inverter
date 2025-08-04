@@ -172,7 +172,6 @@ sensor:
         return calculated_value;
       }
       return {}; // Odrzuć, jeśli coś nadal jest nie tak
-    update_interval: 15s # Ustaw interwał odświeżania, np. 15 sekund
 
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
@@ -363,6 +362,7 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
+
 
 
 
