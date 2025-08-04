@@ -148,7 +148,7 @@ sensor:
     internal: true # Ukrywamy ten sensor w Home Assistant
 
   # 2. Tworzymy główny sensor, który łączy powyższe wartości
-  - platform: template
+  - platform: modbus_controller
     name: "Total Energy Bought"
     id: total_energy_bought # Nadpisujemy stary ID nowym sensorem
     unit_of_measurement: "kWh"
@@ -362,6 +362,7 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
+
 
 
 
