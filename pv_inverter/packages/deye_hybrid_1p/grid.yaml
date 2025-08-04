@@ -130,27 +130,27 @@ sensor:
       - multiply: 0.1
     icon: "mdi:transmission-tower-export"
 
-  # 1. Tworzymy dwa sensory pomocnicze do odczytu osobnych rejestrów
+  # 2 auxiliary sensors for reading separate registers
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
-    id: total_energy_bought_low # Rejestr 78 (dolna część)
+    id: total_energy_bought_low 
     address: 78
     register_type: holding
     value_type: U_WORD
-    internal: true # Ukrywamy ten sensor w Home Assistant
+    internal: true # Hidden in HA
 
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
-    id: total_energy_bought_high # Rejestr 80 (górna część)
+    id: total_energy_bought_high 
     address: 80
     register_type: holding
     value_type: U_WORD
-    internal: true # Ukrywamy ten sensor w Home Assistant
+    internal: true # Hidden in HA
 
-  # 2. Tworzymy główny sensor, który łączy powyższe wartości
+  # Mmin Sensor
   - platform: modbus_controller
     name: "Total Energy Bought"
-    id: total_energy_bought # Nadpisujemy stary ID nowym sensorem
+    id: total_energy_bought
     unit_of_measurement: "kWh"
     device_class: energy
     state_class: "total_increasing"
@@ -165,7 +165,7 @@ sensor:
       // (wartość_górna * 65536 + wartość_dolna) * 0.1
       float calculated_value = ((high * 65536.0) + low) * 0.1;
 
-      // Zostawiamy nasze "pancerne" zabezpieczenie na wszelki wypadek
+      // "Pancerne" zabezpieczenie na wszelki wypadek
       static float last_value = NAN;
       if (isnan(last_value) || (calculated_value >= last_value && calculated_value < last_value + 1000.0)) {
         last_value = calculated_value;
@@ -362,8 +362,6 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
-
-
 
 
 
