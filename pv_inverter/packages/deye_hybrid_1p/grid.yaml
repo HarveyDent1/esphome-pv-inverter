@@ -148,7 +148,7 @@ sensor:
     internal: true # Hidden in HA
 
   # Mmin Sensor
-  - platform: modbus_controller
+  - platform: template
     name: "Total Energy Bought"
     id: total_energy_bought
     unit_of_measurement: "kWh"
