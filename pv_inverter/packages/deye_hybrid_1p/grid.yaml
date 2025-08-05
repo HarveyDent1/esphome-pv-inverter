@@ -155,7 +155,7 @@ sensor:
     accuracy_decimals: 1
     icon: "mdi:transmission-tower-import"
     lambda: |-
-      auto high = id(total_energy_bought_hihg_bytes).state;
+      auto high = id(total_energy_bought_high_bytes).state;
       auto low = id(total_energy_bought_low_bytes ).state;
       float calculated_value = ((high * 65536.0) + low) * 0.1;
       return {};
@@ -349,5 +349,6 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
+
 
 
