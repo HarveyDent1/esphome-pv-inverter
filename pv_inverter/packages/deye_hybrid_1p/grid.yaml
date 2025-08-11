@@ -141,8 +141,8 @@ sensor:
     filters:
       - multiply: 0.1
     icon: "mdi:transmission-tower-export"
-    
-# 2. SEKCJA Z TWOIMI SENSORAMI - zastąp nią swój obecny kod
+
+
   # Sensory pomocnicze - zostają bez zmian
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
@@ -170,36 +170,23 @@ sensor:
     accuracy_decimals: 1
     icon: "mdi:transmission-tower-import"
     lambda: |-
-      # Poprawnie pobieramy wartości z sensorów pomocniczych
       auto high = id(total_energy_bought_high_bytes).state;
       auto low = id(total_energy_bought_low_bytes).state;
-      
-      #  Zabezpieczenie na wypadek, gdyby któryś z odczytów był niedostępny
       if (isnan(high) || isnan(low)) {
         return {}; 
       }
-
-      # Łączymy wartości w poprawny i wydajny sposób (operacje bitowe)
       float calculated_value = (((uint32_t)high << 16) | (uint32_t)low) * 0.1;
-
-      # ---- OSTATECZNY FILTR Z TIMEOUTEM ----
       unsigned long now = millis();
-      
-      # Warunek 1: Reset filtra, jeśli od ostatniej aktualizacji minęła ponad godzina (3 600 000 ms)
       if (id(last_update_time) > 0 && (now - id(last_update_time) > 3600000)) {
         id(last_total_energy_bought) = calculated_value;
         id(last_update_time) = now;
         return calculated_value;
       }
-      
-      # Warunek 2: Akceptacja wartości przy pierwszym uruchomieniu lub przy normalnym, logicznym wzroście
       if (isnan(id(last_total_energy_bought)) || (calculated_value >= id(last_total_energy_bought) && calculated_value < id(last_total_energy_bought) + 1000.0)) {
         id(last_total_energy_bought) = calculated_value;
         id(last_update_time) = now;
         return calculated_value;
       }
-
-      # Odrzuć odczyt, jeśli nie spełnia powyższych warunków (np. jest chwilowym spadkiem)
       return {};
       
   # - platform: modbus_controller
