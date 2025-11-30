@@ -31,7 +31,6 @@ binary_sensor:
     name: "Load Priority"
     register_type: holding
     address: 243
-    value_type: U_WORD
     bitmask: 0
     lambda: |-
       if (x == 1) {
@@ -148,6 +147,7 @@ number:
     min_value: 0
     step: 1
     icon: "mdi:transmission-tower"
+
 
 
 
