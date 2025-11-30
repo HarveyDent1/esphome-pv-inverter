@@ -41,7 +41,7 @@ binary_sensor:
       } else {
         return false;  // OFF: "Battery First" lub inna wartość
       }
-    icon: "mdi:priority-high
+    icon: "mdi:priority-high"
 
 switch:
   - platform: modbus_controller
@@ -150,6 +150,7 @@ number:
     min_value: 0
     step: 1
     icon: "mdi:transmission-tower"
+
 
 
 
