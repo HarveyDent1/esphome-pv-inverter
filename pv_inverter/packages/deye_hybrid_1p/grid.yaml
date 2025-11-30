@@ -310,7 +310,7 @@ switch:
     entity_category: config
     icon: "mdi:generator-stationary"
 
-number: 
+number:
   - platform: modbus_controller
     use_write_multiple: true
     modbus_controller_id: ${modbus_controller_id}
@@ -322,7 +322,7 @@ number:
     register_type: holding
     min_value: 100
     max_value: 290
-    step: 1
+    step: 0.1
     address: 287
     value_type: U_WORD
     icon: "mdi:sine-wave"
@@ -338,7 +338,7 @@ number:
     register_type: holding
     min_value: 100
     max_value: 290
-    step: 1
+    step: 0.1
     address: 288
     value_type: U_WORD
     icon: "mdi:sine-wave"
@@ -374,4 +374,5 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
+
 
