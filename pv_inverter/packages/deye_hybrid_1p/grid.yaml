@@ -325,9 +325,6 @@ number:
     step: 0.1
     address: 287
     value_type: U_WORD
-    filters:
-      - offset: -1000
-      - multiply: 0.1
     icon: "mdi:sine-wave"
 
   - platform: modbus_controller
@@ -377,6 +374,7 @@ number:
     address: 290
     value_type: U_WORD
     icon: "mdi:sine-wave"
+
 
 
 
