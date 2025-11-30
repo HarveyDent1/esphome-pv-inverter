@@ -216,7 +216,6 @@ number:
     min_value: 0
     max_value: 8000
     step: 1
-    address: 241
+    address: 224
     value_type: U_WORD
     icon: "mdi:solar-power"
-
