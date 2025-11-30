@@ -24,11 +24,28 @@
       "Zero Export To Load": 1
       "Zero Export To CT": 2
 
+# binary_sensor:
+#   - platform: template
+#     name: "Load Priority"
+#     lambda: return id(energy_management_priority).current_option() == "Load First";
+#     icon: "mdi:priority-high"
+
 binary_sensor:
-  - platform: template
+  - platform: modbus_controller
+    modbus_controller_id: ${modbus_controller_id}
+    id: load_priority
     name: "Load Priority"
-    lambda: return id(energy_management_priority).current_option() == "Load First";
-    icon: "mdi:priority-high"
+    register_type: holding 
+    address: 243
+    value_type: U_WORD
+    bitmask: 0  
+    lambda: |-
+      if (x == 1) {
+        return true;  // ON: Aktywny tryb "Load First"
+      } else {
+        return false;  // OFF: "Battery First" lub inna wartość
+      }
+    icon: "mdi:priority-high
 
 switch:
   - platform: modbus_controller
@@ -137,3 +154,4 @@ number:
     min_value: 0
     step: 1
     icon: "mdi:transmission-tower"
+
