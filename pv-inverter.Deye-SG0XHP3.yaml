@@ -29,9 +29,11 @@ substitutions:
   default_solar_sell: "on" # "on", "off"
   default_force_off_grid: "off" # "on", "off"
 
+  enable_sync_time: false # true, false - Enable time sync with HomeAssistant (Deye 3P inverters only)
+
 packages:
   pv_inverter:
-    url: https://github.com/Lewa-Reka/esphome-pv-inverter
+    url: https://github.com/Lewa-Reka/esphome-deye-inverter
     refresh: 12h
     files: pv_inverter/deye_hybrid_3p_hv.yaml # SG0XHP3 High Voltage (3P)
 
