@@ -1,4 +1,4 @@
-# ESPHome PV Inverter
+# ESPHome Deye Inverter
 
 <!--
 Copyright 2025 Lewa-Reka <lewareka.yt@gmail.com>
@@ -17,42 +17,34 @@ limitations under the License.
 -->
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/lewa-reka/esphome-pv-inverter/build-ci.yaml?style=for-the-badge)
-![GitHub License](https://img.shields.io/github/license/lewa-reka/esphome-pv-inverter?style=for-the-badge)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lewa-reka/esphome-pv-inverter?style=for-the-badge)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/lewa-reka/esphome-deye-inverter/build-ci.yaml?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/lewa-reka/esphome-deye-inverter?style=for-the-badge)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lewa-reka/esphome-deye-inverter?style=for-the-badge)
 
-An ESPHome-based solution for monitoring and controlling photovoltaic inverters via Modbus RTU communication. This project provides comprehensive integration with Home Assistant, enabling real-time monitoring and control of solar power systems.
+An ESPHome-based solution for monitoring and controlling Deye photovoltaic inverters via Modbus RTU communication. This project provides comprehensive integration with Home Assistant, enabling real-time monitoring and control of solar power systems.
 
 Installation & Presentation: https://youtu.be/iJjsA_MzmnE [PL]
 
-## ⚠️ Breaking Changes
+## 📚 Documentation
 
-### Version 0.4.0
-- **Default Baud Rate Change for Deye SG0XLP3 and SG0XHP3 Inverters**: The default baud rate has been changed from **19200** to **9600** for better compatibility and stability.
-- **Action Required**: If you're upgrading from a previous version and have a inverter configured with baud rate 19200, you **must** change it to 9600 before updating.
+- **[Supported Devices](docs/SUPPORTED_DEVICES.md)**: List of supported inverters and specific configurations.
+- **[Features & Capabilities](docs/FEATURES.md)**: Detailed overview of features, safety mechanisms, and monitoring capabilities.
+- **[Installation Guide](docs/INSTALLATION.md)**: Hardware requirements, wiring diagrams, and step-by-step installation instructions.
+- **[Configuration](docs/CONFIGURATION.md)**: Configuration options, parameters, and update instructions.
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)**: Common issues and solutions.
+- **[Contributing](docs/CONTRIBUTING.md)**: Guidelines for contributing to the project.
 
-## 📋 Currently Supported Inverters
+## 🎨 Home Assistant Visualization Examples
 
-- **Deye SG0XLP1** *(Single Phase Low Voltage)*
-   
-  ***Single Phase Recommended baud rate: 9600 (default, nothing to change)***
+The integration works seamlessly with the **[Sunsynk Power Flow Card](https://github.com/slipx06/sunsynk-power-flow-card)** by [slipx06](https://github.com/slipx06), providing an elegant visualization of energy flow in your photovoltaic system. Below are example card configurations available for 3-phase inverters:
 
-- **Deye SG04LP3** *(Low Voltage)*
-- **Deye SG05LP3** *(Low Voltage)*
-- **Deye SG01HP3** *(High Voltage)*
-- **Deye SG02HP3** *(High Voltage)*
-   
-  ***3 Phases Recommended baud rate: 9600 (default, nothing to change)***
+![Sunsynk Power Flow Card Examples](docs/examples/img/card_3p_all.png)
 
-#### Deye Inverter Configuration
+### Card Styles:
 
-To set the baud rate on your Deye inverter:
-1. Navigate to: **Advanced Settings** → **Paral. Set 3** → **Boud Rate**
-2. Set the value to **9600**
-3. Save the settings
-
-
-**Note**: After saving, the screen will turn off and a red LED alarm will flash - this is normal behavior. Everything should return to normal after a moment.
+- **[Example 1: Full Style (Modern)](docs/examples/SUNSYNK_POWER_FLOW_CARD.md#example-1-full-style-modern---3-phase)** - Modern style with large fonts, ideal for standard dashboard views
+- **[Example 2: Compact Style](docs/examples/SUNSYNK_POWER_FLOW_CARD.md#example-2-compact-style---3-phase)** - Compact style that saves space, featuring a Deye-style inverter icon
+- **[Example 3: Wide Style with Dual Battery](docs/examples/SUNSYNK_POWER_FLOW_CARD.md#example-3-wide-style-with-dual-battery---3-phase)** - Wide style with dual battery support, perfect for wider dashboard layouts (tablets, desktops)
 
 ## 🚀 Features
 
@@ -330,26 +322,24 @@ limitations under the License.
 
 This project uses ESPHome and related components. Please refer to the [NOTICE](NOTICE) file for additional license information.
 
-## 🤝 Contributing
-
-Contributions are welcome! Please ensure all contributed code follows the Apache 2.0 license requirements.
-
 ## 🙏 Acknowledgments
 
 - [Solarman Stick Logger by David Rapan](https://github.com/davidrapan/ha-solarman) and [pilipphenkel](https://github.com/philipphenkel/esphome-config) for inspirations
+- [Sunsynk Power Flow Card by slipx06](https://github.com/slipx06/sunsynk-power-flow-card) for the excellent visualization card
 - [ESPHome Team](https://esphome.io/) for the excellent home automation platform
 - [Home Assistant Community](https://community.home-assistant.io/) for continuous support and inspiration
 - All contributors and testers who helped improve this integration
 
 ## 📞 Support
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/Lewa-Reka/esphome-pv-inverter/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Lewa-Reka/esphome-pv-inverter/discussions) for questions and community support
+- **GitHub Issues**: [Report bugs or request features](https://github.com/Lewa-Reka/esphome-deye-inverter/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Lewa-Reka/esphome-deye-inverter/discussions) for questions and community support
 - **Home Assistant Community**: [ESPHome section](https://community.home-assistant.io/c/esphome/) for general ESPHome help
 
 ## 🔗 Related Projects
 
 - [HA-Solarman](https://github.com/davidrapan/ha-solarman) - Alternative WiFi stick integration
+- [Sunsynk Power Flow Card](https://github.com/slipx06/sunsynk-power-flow-card) - Home Assistant card for visualizing solar power flow
 - [ESPHome Official Docs](https://esphome.io/) - ESPHome documentation
 
 ---
