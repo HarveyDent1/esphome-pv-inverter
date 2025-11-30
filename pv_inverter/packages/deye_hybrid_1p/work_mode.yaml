@@ -4,15 +4,13 @@ select:
     use_write_multiple: true
     modbus_controller_id: ${modbus_controller_id}
     name: "Energy Management Priority"
-    register_type: holding 
     address: 243
     value_type: U_WORD
-    read: true 
     icon: "mdi:priority-high"
     optionsmap:
       "Battery First": 0
       "Load First": 1
-      
+
   - platform: modbus_controller
     use_write_multiple: true
     modbus_controller_id: ${modbus_controller_id}
@@ -150,6 +148,7 @@ number:
     min_value: 0
     step: 1
     icon: "mdi:transmission-tower"
+
 
 
 
