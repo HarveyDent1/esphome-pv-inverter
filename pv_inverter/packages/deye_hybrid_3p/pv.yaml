@@ -12,222 +12,78 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sensor:
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV1 Power"
-    id: pv1_power
-    register_type: holding
-    address: 672
-    unit_of_measurement: "W"
-    device_class: power
-    state_class: "measurement"
-    accuracy_decimals: 0
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
+substitutions:
+  enable_sync_time: false
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV2 Power"
-    id: pv2_power
-    register_type: holding
-    address: 673
-    unit_of_measurement: "W"
-    device_class: power
-    state_class: "measurement"
-    accuracy_decimals: 0
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
-
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV3 Power"
-    id: pv3_power
-    register_type: holding
-    address: 674
-    unit_of_measurement: "W"
-    device_class: power
-    state_class: "measurement"
-    accuracy_decimals: 0
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
-    disabled_by_default: true
-
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV4 Power"
-    id: pv4_power
-    register_type: holding
-    address: 675
-    unit_of_measurement: "W"
-    device_class: power
-    state_class: "measurement"
-    accuracy_decimals: 0
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
-    disabled_by_default: true
-
+time:
+  - platform: homeassistant
+    id: esptime
+    on_time:
+      - cron: "0 15 3,15 * * *"
+        then:
+          - if:
+              condition:
+                lambda: |-
+                  return "${enable_sync_time}" == "True";
+              then:
+                - logger.log: "Syncing inverter time with HomeAssistant"
+                - script.execute: set_inverter_time_script
+              else:
+                - logger.log: "HomeAssistant time sync is disabled"
+                
+button:
   - platform: template
-    name: "PV Power"
-    unit_of_measurement: "W"
-    id: pv_power
-    device_class: power
-    state_class: "measurement"
-    accuracy_decimals: 0
-    update_interval: 5s
-    icon: "mdi:solar-power-variant"
-    lambda: |-
-      float pv1 = isnan(id(pv1_power).state) ? 0.0 : id(pv1_power).state;
-      float pv2 = isnan(id(pv2_power).state) ? 0.0 : id(pv2_power).state;
-      float pv3 = isnan(id(pv3_power).state) ? 0.0 : id(pv3_power).state;
-      float pv4 = isnan(id(pv4_power).state) ? 0.0 : id(pv4_power).state;
-      return pv1 + pv2 + pv3 + pv4;
+    name: "Sync Inverter Time"
+    id: sync_inverter_time
+    icon: mdi:timer-sync
+    entity_category: diagnostic
+    on_press:
+      - script.execute: set_inverter_time_script
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV1 Voltage"
-    register_type: holding
-    address: 676
-    unit_of_measurement: "V"
-    device_class: voltage
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
+script:
+  - id: set_inverter_time_script
+    then:
+      - lambda: |-
+          auto time = id(esptime).now();
+          if (!time.is_valid()) {
+            ESP_LOGE("time_sync", "Invalid time");
+            return;
+          }
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV1 Current"
-    register_type: holding
-    address: 677
-    unit_of_measurement: "A"
-    device_class: current
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
+          if (time.year < 2000) {
+            ESP_LOGE("time_sync", "Invalid year (expected >= 2000, got %04d)", time.year);
+            return;
+          }
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV2 Voltage"
-    register_type: holding
-    address: 678
-    unit_of_measurement: "V"
-    device_class: voltage
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
+          uint8_t year = time.year - 2000;
+          if (year > 255) year = 255;
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV2 Current"
-    register_type: holding
-    address: 679
-    unit_of_measurement: "A"
-    device_class: current
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
+          uint8_t month = time.month;
+          if (month < 1) month = 1;
+          if (month > 12) month = 12;
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV3 Voltage"
-    register_type: holding
-    address: 680
-    unit_of_measurement: "V"
-    device_class: voltage
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
-    disabled_by_default: true
+          uint8_t day = time.day_of_month;
+          if (day < 1) day = 1;
+          if (day > 31) day = 31;
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV3 Current"
-    register_type: holding
-    address: 681
-    unit_of_measurement: "A"
-    device_class: current
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
-    disabled_by_default: true
+          uint8_t hour = time.hour;
+          if (hour > 23) hour = 23;
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV4 Voltage"
-    register_type: holding
-    address: 682
-    unit_of_measurement: "V"
-    device_class: voltage
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
-    disabled_by_default: true
+          uint8_t minute = time.minute;
+          if (minute > 59) minute = 59;
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "PV4 Current"
-    register_type: holding
-    address: 683
-    unit_of_measurement: "A"
-    device_class: current
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power-variant"
-    disabled_by_default: true
+          uint8_t second = time.second;
+          if (second > 59) second = 59;
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "Daily PV Production"
-    id: daily_pv_production
-    register_type: holding
-    address: 529
-    unit_of_measurement: "kWh"
-    device_class: energy
-    state_class: "total_increasing"
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.1
-    value_type: U_WORD
-    icon: "mdi:solar-power"
+          uint16_t reg62 = ((uint16_t)year << 8) | month;
+          uint16_t reg63 = ((uint16_t)day << 8) | hour;
+          uint16_t reg64 = ((uint16_t)minute << 8) | second;
 
-  - platform: modbus_controller
-    modbus_controller_id: ${modbus_controller_id}
-    name: "Total PV Production"
-    id: total_pv_production
-    register_type: holding
-    address: 534
-    unit_of_measurement: "kWh"
-    device_class: energy
-    state_class: "total_increasing"
-    accuracy_decimals: 1
-    value_type: U_DWORD_R
-    filters:
-      - multiply: 0.1
-    icon: "mdi:solar-power"
+          std::vector<uint16_t> data = {reg62, reg63, reg64};
+          auto *controller = id(${modbus_controller_id});
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 62, data.size(), data);
+          controller->queue_command(cmd);
 
-switch:
-  - platform: modbus_controller
-    use_write_multiple: true
-    modbus_controller_id: ${modbus_controller_id}
-    name: "MPPT Multi-point Scanning"
-    register_type: holding
-    address: 341
-    bitmask: 0x0004
-    entity_category: config
-    icon: "mdi:solar-power-variant-outline"
+          ESP_LOGI("time_sync", "Time set: %04d-%02d-%02d %02d:%02d:%02d (reg62=0x%04X, reg63=0x%04X, reg64=0x%04X)",
+                   time.year, time.month, time.day_of_month, time.hour, time.minute, time.second,
+                   reg62, reg63, reg64);
