@@ -133,7 +133,3 @@ text_sensor:
       id: esp_mac_address
       icon: mdi:expansion-card
       entity_category: diagnostic
-
-
-
-
