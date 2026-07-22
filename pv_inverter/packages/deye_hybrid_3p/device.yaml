@@ -1,4 +1,4 @@
-﻿# Copyright 2025 Lewa-Reka <lewareka.yt@gmail.com>
+# Copyright 2025 Lewa-Reka <lewareka.yt@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -217,7 +217,7 @@ binary_sensor:
 
   - platform: modbus_controller
     modbus_controller_id: ${modbus_controller_id}
-    name: "Turn Off/On Status"
+    name: "Turn Off On Status"
     register_type: holding
     address: 551
     bitmask: 0x1
@@ -661,6 +661,7 @@ text_sensor:
 number:
   - platform: modbus_controller
     use_write_multiple: true
+    mode: box
     modbus_controller_id: ${modbus_controller_id}
     name: "Self Check Time"
     id: self_check_time
