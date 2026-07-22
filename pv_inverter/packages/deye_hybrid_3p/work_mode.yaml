@@ -1,4 +1,4 @@
-﻿# Copyright 2025 Lewa-Reka <lewareka.yt@gmail.com>
+# Copyright 2025 Lewa-Reka <lewareka.yt@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,13 +38,16 @@ select:
       "Zero Export To Load": 1
       "Zero Export To CT": 2
 
-binary_sensor:
-  - platform: template
+switch:
+  - platform: modbus_controller
+    use_write_multiple: true
+    modbus_controller_id: ${modbus_controller_id}
+    register_type: holding
     name: "Load Priority"
-    lambda: return id(energy_management_priority).current_option() == "Load First";
+    bitmask: 1
+    address: 141
     icon: "mdi:priority-high"
 
-switch:
   - platform: modbus_controller
     use_write_multiple: true
     modbus_controller_id: ${modbus_controller_id}
@@ -55,14 +58,22 @@ switch:
     bitmask: 1
     icon: "mdi:toggle-switch"
 
-  - platform: modbus_controller
-    use_write_multiple: true
-    modbus_controller_id: ${modbus_controller_id}
+  - platform: template
     name: "Grid Peak Shaving Enable"
-    register_type: holding
-    address: 178
-    bitmask: 0x0010 # bit 4
+    id: switch_grid_peak_shaving
     icon: "mdi:transmission-tower"
+    optimistic: true
+    restore_mode: DISABLED
+    entity_category: config
+    lambda: "return ((int)id(gen_config_register_raw).state & 0x0010) != 0;"
+    turn_on_action:
+      - number.set:
+          id: gen_config_register_raw
+          value: !lambda "return ((int)id(gen_config_register_raw).state) | 0x0010;"
+    turn_off_action:
+      - number.set:
+          id: gen_config_register_raw
+          value: !lambda "return ((int)id(gen_config_register_raw).state) & ~0x0010;"
 
 number:
   - platform: modbus_controller
@@ -76,6 +87,7 @@ number:
     step: 1
     address: 143
     value_type: U_WORD
+    mode: box
     icon: "mdi:cash-multiple"
 
   - platform: modbus_controller
@@ -89,6 +101,7 @@ number:
     step: 1
     address: 340
     value_type: U_WORD
+    mode: box
     icon: "mdi:solar-power"
 
   - platform: modbus_controller
@@ -103,6 +116,7 @@ number:
     min_value: 20
     max_value: 500
     step: 1
+    mode: box
     icon: "mdi:transmission-tower-import"
 
   - platform: modbus_controller
@@ -117,4 +131,6 @@ number:
     value_type: U_WORD
     min_value: 0
     step: 1
+    mode: box
     icon: "mdi:transmission-tower"
+
