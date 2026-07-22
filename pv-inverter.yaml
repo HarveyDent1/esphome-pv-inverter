@@ -29,7 +29,7 @@ substitutions:
 packages:
   controller:
     url: https://github.com/HarveyDent1/esphome-pv-inverter
-    ref: general-recovery
+    ref: main
     refresh: 12h
     files:
       validation.yaml
