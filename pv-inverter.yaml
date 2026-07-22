@@ -28,7 +28,7 @@ substitutions:
 
 packages:
   controller:
-    url: https://github.com/TheApsik/esphome-pv-inverter
+    url: https://github.com/HarveyDent1/esphome-pv-inverter
     ref: general-recovery
     refresh: 12h
     files:
